@@ -17,11 +17,22 @@ kotlin {
         }
     }
 
-    jvm {
+    jvm("desktop") {
         compilerOptions {
             jvmTarget = JvmTarget.JVM_25
         }
     }
+
+    js(IR) {
+        browser()
+    }
+    wasmJs {
+        browser()
+    }
+
+    macosArm64()
+    iosArm64("iosArm64")
+    iosSimulatorArm64("iosSimulatorArm64")
 
     sourceSets {
         commonMain.dependencies {
@@ -38,7 +49,7 @@ mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
 
-    coordinates("io.github.kyant0", "shapes", "1.0.1")
+    coordinates("io.github.kyant0", "shapes", "1.0.2")
 
     pom {
         name.set("Shapes")
