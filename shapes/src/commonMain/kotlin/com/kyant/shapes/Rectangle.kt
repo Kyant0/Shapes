@@ -15,31 +15,18 @@ data object Rectangle : RoundedRectangularShape {
     override fun lerp(to: RoundedRectangularShape, fraction: Float): RoundedRectangularShape {
         return when (to) {
             is Rectangle -> this
-            is RoundedRectangle -> RoundedRectangle(
-                cornerRadius = lerp(CornerRadius.Zero, to.cornerRadius, fraction),
-                style = to.style
-            )
+            is RoundedRectangle ->
+                RoundedRectangle(cornerRadius = lerp(CornerRadius.Zero, to.cornerRadius, fraction))
 
-            is UnevenRoundedRectangle -> UnevenRoundedRectangle(
-                cornerRadii = lerp(RectangleCornerRadii.Zero, to.cornerRadii, fraction),
-                style = to.style
-            )
+            is UnevenRoundedRectangle ->
+                UnevenRoundedRectangle(cornerRadii = lerp(RectangleCornerRadii.Zero, to.cornerRadii, fraction))
 
-            is CapsuleShape -> RoundedRectangle(
-                cornerRadius = lerp(CornerRadius.Zero, CornerRadius.Max, fraction),
-                style = to.style
-            )
+            is Capsule ->
+                RoundedRectangle(cornerRadius = lerp(CornerRadius.Zero, CornerRadius.Max, fraction))
         }
     }
 
     override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
-        return Outline.Rectangle(
-            Rect(
-                left = 0f,
-                top = 0f,
-                right = size.width,
-                bottom = size.height
-            )
-        )
+        return Outline.Rectangle(Rect(0f, 0f, size.width, size.height))
     }
 }

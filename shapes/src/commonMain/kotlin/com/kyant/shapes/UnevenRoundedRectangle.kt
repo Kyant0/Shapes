@@ -14,8 +14,7 @@ fun RoundedRectangle(
     topEnd: CornerRadius = CornerRadius.Zero,
     bottomEnd: CornerRadius = CornerRadius.Zero,
     bottomStart: CornerRadius = CornerRadius.Zero,
-    rtlAware: Boolean = true,
-    style: RoundedCornerStyle = RoundedCornerStyle.Continuous
+    rtlAware: Boolean = true
 ) =
     UnevenRoundedRectangle(
         cornerRadii = RectangleCornerRadii(
@@ -24,8 +23,7 @@ fun RoundedRectangle(
             bottomEnd = bottomEnd,
             bottomStart = bottomStart,
             rtlAware = rtlAware
-        ),
-        style = style
+        )
     )
 
 @Suppress("FunctionName")
@@ -34,8 +32,7 @@ fun RoundedRectangle(
     topEnd: Float = 0f,
     bottomEnd: Float = 0f,
     bottomStart: Float = 0f,
-    rtlAware: Boolean = true,
-    style: RoundedCornerStyle = RoundedCornerStyle.Continuous
+    rtlAware: Boolean = true
 ) =
     UnevenRoundedRectangle(
         cornerRadii = RectangleCornerRadii(
@@ -44,8 +41,7 @@ fun RoundedRectangle(
             bottomEnd = CornerRadius.Px(bottomEnd),
             bottomStart = CornerRadius.Px(bottomStart),
             rtlAware = rtlAware
-        ),
-        style = style
+        )
     )
 
 @Suppress("FunctionName")
@@ -54,8 +50,7 @@ fun RoundedRectangle(
     topEnd: Dp = 0f.dp,
     bottomEnd: Dp = 0f.dp,
     bottomStart: Dp = 0f.dp,
-    rtlAware: Boolean = true,
-    style: RoundedCornerStyle = RoundedCornerStyle.Continuous
+    rtlAware: Boolean = true
 ) =
     UnevenRoundedRectangle(
         cornerRadii = RectangleCornerRadii(
@@ -64,14 +59,10 @@ fun RoundedRectangle(
             bottomEnd = CornerRadius.Dp(bottomEnd),
             bottomStart = CornerRadius.Dp(bottomStart),
             rtlAware = rtlAware
-        ),
-        style = style
+        )
     )
 
-data class UnevenRoundedRectangle(
-    val cornerRadii: RectangleCornerRadii,
-    val style: RoundedCornerStyle = RoundedCornerStyle.Continuous
-) : RoundedRectangularShape {
+data class UnevenRoundedRectangle(val cornerRadii: RectangleCornerRadii) : RoundedRectangularShape {
 
     override fun cornerRadii(size: Size, layoutDirection: LayoutDirection, density: Density): FloatArray {
         val maxRadius = size.minDimension * 0.5f
@@ -87,15 +78,11 @@ data class UnevenRoundedRectangle(
 
     override fun lerp(to: RoundedRectangularShape, fraction: Float): RoundedRectangularShape {
         return when (to) {
-            is UnevenRoundedRectangle -> UnevenRoundedRectangle(
-                cornerRadii = lerp(this.cornerRadii, to.cornerRadii, fraction),
-                style = to.style
-            )
+            is UnevenRoundedRectangle ->
+                UnevenRoundedRectangle(cornerRadii = lerp(this.cornerRadii, to.cornerRadii, fraction))
 
-            is CapsuleShape -> UnevenRoundedRectangle(
-                cornerRadii = lerp(this.cornerRadii, RectangleCornerRadii.Max, fraction),
-                style = to.style
-            )
+            is Capsule ->
+                UnevenRoundedRectangle(cornerRadii = lerp(this.cornerRadii, RectangleCornerRadii.Max, fraction))
 
             else -> to.lerp(this, 1f - fraction)
         }
@@ -104,7 +91,7 @@ data class UnevenRoundedRectangle(
     override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
         val maxRadius = size.minDimension * 0.5f
         return context(size, layoutDirection, density) {
-            style.createOutline(
+            createRoundedRectangleOutline(
                 size = size,
                 topLeft = cornerRadii.topLeft.fastCoerceIn(0f, maxRadius),
                 topRight = cornerRadii.topRight.fastCoerceIn(0f, maxRadius),
@@ -119,8 +106,7 @@ data class UnevenRoundedRectangle(
         topEnd: CornerRadius = cornerRadii.topEnd,
         bottomEnd: CornerRadius = cornerRadii.bottomEnd,
         bottomStart: CornerRadius = cornerRadii.bottomStart,
-        rtlAware: Boolean = cornerRadii.rtlAware,
-        style: RoundedCornerStyle = this.style
+        rtlAware: Boolean = cornerRadii.rtlAware
     ) =
         UnevenRoundedRectangle(
             cornerRadii = RectangleCornerRadii(
@@ -129,7 +115,6 @@ data class UnevenRoundedRectangle(
                 bottomEnd = bottomEnd,
                 bottomStart = bottomStart,
                 rtlAware = rtlAware
-            ),
-            style = style
+            )
         )
 }

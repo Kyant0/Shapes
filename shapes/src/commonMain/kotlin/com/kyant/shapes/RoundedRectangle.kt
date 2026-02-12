@@ -8,28 +8,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.util.fastCoerceIn
 
-fun RoundedRectangle(
-    cornerRadius: Float,
-    style: RoundedCornerStyle = RoundedCornerStyle.Continuous
-) =
-    RoundedRectangle(
-        cornerRadius = CornerRadius.Px(cornerRadius),
-        style = style
-    )
+fun RoundedRectangle(cornerRadius: Float) =
+    RoundedRectangle(cornerRadius = CornerRadius.Px(cornerRadius))
 
-fun RoundedRectangle(
-    cornerRadius: Dp,
-    style: RoundedCornerStyle = RoundedCornerStyle.Continuous
-) =
-    RoundedRectangle(
-        cornerRadius = CornerRadius.Dp(cornerRadius),
-        style = style
-    )
+fun RoundedRectangle(cornerRadius: Dp) =
+    RoundedRectangle(cornerRadius = CornerRadius.Dp(cornerRadius))
 
-data class RoundedRectangle(
-    val cornerRadius: CornerRadius,
-    val style: RoundedCornerStyle = RoundedCornerStyle.Continuous
-) : RoundedRectangularShape {
+data class RoundedRectangle(val cornerRadius: CornerRadius) : RoundedRectangularShape {
 
     override fun cornerRadii(size: Size, layoutDirection: LayoutDirection, density: Density): FloatArray {
         val cornerRadiusPx =
@@ -42,18 +27,15 @@ data class RoundedRectangle(
     override fun lerp(to: RoundedRectangularShape, fraction: Float): RoundedRectangularShape {
         return when (to) {
             is RoundedRectangle -> RoundedRectangle(
-                cornerRadius = lerp(this.cornerRadius, to.cornerRadius, fraction),
-                style = to.style
+                cornerRadius = lerp(this.cornerRadius, to.cornerRadius, fraction)
             )
 
             is UnevenRoundedRectangle -> UnevenRoundedRectangle(
-                cornerRadii = lerp(RectangleCornerRadii(this.cornerRadius), to.cornerRadii, fraction),
-                style = to.style
+                cornerRadii = lerp(RectangleCornerRadii(this.cornerRadius), to.cornerRadii, fraction)
             )
 
-            is CapsuleShape -> RoundedRectangle(
-                cornerRadius = lerp(this.cornerRadius, CornerRadius.Max, fraction),
-                style = to.style
+            is Capsule -> RoundedRectangle(
+                cornerRadius = lerp(this.cornerRadius, CornerRadius.Max, fraction)
             )
 
             else -> to.lerp(this, 1f - fraction)
@@ -77,32 +59,14 @@ data class RoundedRectangle(
             )
         }
 
-        return style.createOutline(
-            size = size,
-            topLeft = cornerRadiusPx,
-            topRight = cornerRadiusPx,
-            bottomRight = cornerRadiusPx,
-            bottomLeft = cornerRadiusPx
-        )
+        return createRoundedRectangleOutline(size = size, radius = cornerRadiusPx)
     }
 
-    fun copy(
-        cornerRadius: Float,
-        style: RoundedCornerStyle = this.style
-    ) =
-        RoundedRectangle(
-            cornerRadius = cornerRadius,
-            style = style
-        )
+    fun copy(cornerRadius: Float) =
+        RoundedRectangle(cornerRadius = cornerRadius)
 
-    fun copy(
-        cornerRadius: Dp,
-        style: RoundedCornerStyle = this.style
-    ) =
-        RoundedRectangle(
-            cornerRadius = cornerRadius,
-            style = style
-        )
+    fun copy(cornerRadius: Dp) =
+        RoundedRectangle(cornerRadius = cornerRadius)
 
     fun asUneven(rtlAware: Boolean = true): UnevenRoundedRectangle {
         return UnevenRoundedRectangle(
@@ -112,8 +76,7 @@ data class RoundedRectangle(
                 bottomEnd = cornerRadius,
                 bottomStart = cornerRadius,
                 rtlAware = rtlAware
-            ),
-            style = style
+            )
         )
     }
 }

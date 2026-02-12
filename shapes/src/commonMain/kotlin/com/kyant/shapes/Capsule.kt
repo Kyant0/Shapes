@@ -5,18 +5,7 @@ import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 
-val Capsule = Capsule()
-
-@Suppress("FunctionName")
-fun Capsule(
-    style: RoundedCornerStyle = RoundedCornerStyle.Continuous
-) =
-    CapsuleShape(style = style)
-
-@ExposedCopyVisibility
-data class CapsuleShape internal constructor(
-    val style: RoundedCornerStyle = RoundedCornerStyle.Continuous
-) : RoundedRectangularShape {
+data object Capsule : RoundedRectangularShape {
 
     override fun cornerRadii(size: Size, layoutDirection: LayoutDirection, density: Density): FloatArray {
         val cornerRadiusPx = size.minDimension * 0.5f
@@ -25,19 +14,13 @@ data class CapsuleShape internal constructor(
 
     override fun lerp(to: RoundedRectangularShape, fraction: Float): RoundedRectangularShape {
         return when (to) {
-            is CapsuleShape -> this
+            is Capsule -> this
             else -> to.lerp(this, 1f - fraction)
         }
     }
 
     override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
         val cornerRadiusPx = size.minDimension * 0.5f
-        return style.createOutline(
-            size = size,
-            topLeft = cornerRadiusPx,
-            topRight = cornerRadiusPx,
-            bottomRight = cornerRadiusPx,
-            bottomLeft = cornerRadiusPx
-        )
+        return createRoundedRectangleOutline(size = size, radius = cornerRadiusPx)
     }
 }

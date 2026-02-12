@@ -40,8 +40,8 @@ fun MainContent() {
             Box(
                 Modifier
                     .drawBehind {
-                        val shape =
-                            RoundedRectangle(size.minDimension * 0.5f * cornerRadiusRatio.floatValue)
+                        val radius = size.minDimension * 0.5f * cornerRadiusRatio.floatValue
+                        val shape = RoundedRectangle(radius)
                         drawOutline(
                             shape.createOutline(size, layoutDirection, this),
                             color = Color(0xFF0088FF)
