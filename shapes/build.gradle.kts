@@ -10,6 +10,7 @@ plugins {
 
 kotlin {
     androidLibrary {
+        minSdk = 21
         compileSdk = 36
         namespace = "com.kyant.shapes"
         compilerOptions {
@@ -45,7 +46,7 @@ mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
 
-    coordinates("io.github.kyant0", "shapes", "1.0.4")
+    coordinates("io.github.kyant0", "shapes", "1.1.0")
 
     pom {
         name.set("Shapes")
