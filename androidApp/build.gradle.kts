@@ -34,6 +34,14 @@ android {
     }
 }
 
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.addAll(
+            "-Xlambdas=class",
+        )
+    }
+}
+
 dependencies {
     implementation(project(":shapes"))
     implementation(libs.androidx.activity.compose)
