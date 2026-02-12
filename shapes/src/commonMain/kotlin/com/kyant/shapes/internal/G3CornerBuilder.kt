@@ -8,8 +8,8 @@ import kotlin.math.sqrt
 import kotlin.math.tan
 
 internal data class G3CornerBuilder(
-    val extendedFraction: Double = 0.5,
-    val arcFraction: Double = 5.0 / 9.0
+    val extendedFraction: Double = 2.0 / 3.0,
+    val arcFraction: Double = 0.5
 ) {
 
     private val theta = (1.0 - arcFraction) * FRAC_PI_4
