@@ -8,10 +8,4 @@ import androidx.compose.ui.unit.LayoutDirection
 sealed interface RoundedRectangularShape : Shape {
 
     fun cornerRadii(size: Size, layoutDirection: LayoutDirection, density: Density): FloatArray
-
-    fun lerp(to: RoundedRectangularShape, fraction: Float): RoundedRectangularShape
-}
-
-fun lerp(start: RoundedRectangularShape, stop: RoundedRectangularShape, fraction: Float): RoundedRectangularShape {
-    return start.lerp(stop, fraction)
 }

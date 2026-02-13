@@ -76,18 +76,6 @@ data class UnevenRoundedRectangle(val cornerRadii: RectangleCornerRadii) : Round
         }
     }
 
-    override fun lerp(to: RoundedRectangularShape, fraction: Float): RoundedRectangularShape {
-        return when (to) {
-            is UnevenRoundedRectangle ->
-                UnevenRoundedRectangle(cornerRadii = lerp(this.cornerRadii, to.cornerRadii, fraction))
-
-            is Capsule ->
-                UnevenRoundedRectangle(cornerRadii = lerp(this.cornerRadii, RectangleCornerRadii.Max, fraction))
-
-            else -> to.lerp(this, 1f - fraction)
-        }
-    }
-
     override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
         val maxRadius = size.minDimension * 0.5f
         return context(size, layoutDirection, density) {

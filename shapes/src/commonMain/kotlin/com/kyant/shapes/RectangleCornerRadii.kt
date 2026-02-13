@@ -49,12 +49,3 @@ data class RectangleCornerRadii(
             )
     }
 }
-
-fun lerp(start: RectangleCornerRadii, stop: RectangleCornerRadii, fraction: Float) =
-    RectangleCornerRadii(
-        topStart = lerp(start.topStart, stop.topStart, fraction),
-        topEnd = lerp(start.topEnd, stop.topEnd, fraction),
-        bottomEnd = lerp(start.bottomEnd, stop.bottomEnd, fraction),
-        bottomStart = lerp(start.bottomStart, stop.bottomStart, fraction),
-        rtlAware = stop.rtlAware
-    )

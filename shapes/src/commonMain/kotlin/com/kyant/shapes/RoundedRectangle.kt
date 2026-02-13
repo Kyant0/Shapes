@@ -24,24 +24,6 @@ data class RoundedRectangle(val cornerRadius: CornerRadius) : RoundedRectangular
         return FloatArray(4) { cornerRadiusPx }
     }
 
-    override fun lerp(to: RoundedRectangularShape, fraction: Float): RoundedRectangularShape {
-        return when (to) {
-            is RoundedRectangle -> RoundedRectangle(
-                cornerRadius = lerp(this.cornerRadius, to.cornerRadius, fraction)
-            )
-
-            is UnevenRoundedRectangle -> UnevenRoundedRectangle(
-                cornerRadii = lerp(RectangleCornerRadii(this.cornerRadius), to.cornerRadii, fraction)
-            )
-
-            is Capsule -> RoundedRectangle(
-                cornerRadius = lerp(this.cornerRadius, CornerRadius.Max, fraction)
-            )
-
-            else -> to.lerp(this, 1f - fraction)
-        }
-    }
-
     override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
         val cornerRadiusPx =
             context(size, density) {
