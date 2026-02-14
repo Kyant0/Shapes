@@ -28,12 +28,20 @@ private data class LerpRoundedRectangle(
 
     override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
         val cornerRadii = cornerRadii(size, layoutDirection, density)
-        return RoundedRectangle(
-            topStart = CornerRadius.Px(cornerRadii[0]),
-            topEnd = CornerRadius.Px(cornerRadii[1]),
-            bottomEnd = CornerRadius.Px(cornerRadii[2]),
-            bottomStart = CornerRadius.Px(cornerRadii[3]),
-            rtlAware = false
-        ).createOutline(size, layoutDirection, density)
+        val topLeft = cornerRadii[0]
+        val topRight = cornerRadii[1]
+        val bottomRight = cornerRadii[2]
+        val bottomLeft = cornerRadii[3]
+        return if (topLeft == topRight && topRight == bottomRight && bottomRight == bottomLeft) {
+            createRoundedRectangleOutline(size = size, radius = topLeft)
+        } else {
+            createRoundedRectangleOutline(
+                size = size,
+                topLeft = topLeft,
+                topRight = topRight,
+                bottomRight = bottomRight,
+                bottomLeft = bottomLeft
+            )
+        }
     }
 }
