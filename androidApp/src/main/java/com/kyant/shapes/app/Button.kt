@@ -22,7 +22,7 @@ fun Button(
 ) {
     Box(
         modifier
-            .clip(Capsule)
+            .clip(Capsule())
             .clickable(
                 role = Role.Button,
                 onClick = onClick

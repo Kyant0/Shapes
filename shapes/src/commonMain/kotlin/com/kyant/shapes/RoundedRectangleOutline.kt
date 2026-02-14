@@ -7,9 +7,12 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.util.fastCoerceIn
-import com.kyant.shapes.internal.G3CornerBuilder
 
-fun createRoundedRectangleOutline(size: Size, radius: Float): Outline {
+internal fun roundedRectangleOutline(
+    size: Size,
+    radius: Float,
+    style: RoundedCornerStyle
+): Outline {
     val width = size.width
     val height = size.height
     val maxRadius = size.minDimension * 0.5f
@@ -18,8 +21,8 @@ fun createRoundedRectangleOutline(size: Size, radius: Float): Outline {
             Outline.Rectangle(Rect(0f, 0f, width, height))
         }
 
-        width == height && radius >= maxRadius -> {
-            val cornerRadius = CornerRadius(maxRadius)
+        style == RoundedCornerStyle.Circular || (width == height && radius >= maxRadius) -> {
+            val cornerRadius = CornerRadius(radius)
             Outline.Rounded(
                 RoundRect(
                     left = 0f,
@@ -35,17 +38,18 @@ fun createRoundedRectangleOutline(size: Size, radius: Float): Outline {
         }
 
         else -> {
-            Outline.Generic(createRoundedRectanglePath(size, radius))
+            Outline.Generic(continuousCurvatureRoundedRectanglePath(size, radius))
         }
     }
 }
 
-fun createRoundedRectangleOutline(
+internal fun roundedRectangleOutline(
     size: Size,
     topLeft: Float,
     topRight: Float,
     bottomRight: Float,
-    bottomLeft: Float
+    bottomLeft: Float,
+    style: RoundedCornerStyle
 ): Outline {
     val width = size.width
     val height = size.height
@@ -55,25 +59,25 @@ fun createRoundedRectangleOutline(
             Outline.Rectangle(Rect(0f, 0f, width, height))
         }
 
-        width == height && topLeft >= maxRadius && topRight >= maxRadius && bottomRight >= maxRadius && bottomLeft >= maxRadius -> {
-            val cornerRadius = CornerRadius(maxRadius)
+        style == RoundedCornerStyle.Circular ||
+                (width == height && topLeft >= maxRadius && topRight >= maxRadius && bottomRight >= maxRadius && bottomLeft >= maxRadius) -> {
             Outline.Rounded(
                 RoundRect(
                     left = 0f,
                     top = 0f,
                     right = width,
                     bottom = height,
-                    topLeftCornerRadius = cornerRadius,
-                    topRightCornerRadius = cornerRadius,
-                    bottomRightCornerRadius = cornerRadius,
-                    bottomLeftCornerRadius = cornerRadius
+                    topLeftCornerRadius = CornerRadius(topLeft),
+                    topRightCornerRadius = CornerRadius(topRight),
+                    bottomRightCornerRadius = CornerRadius(bottomRight),
+                    bottomLeftCornerRadius = CornerRadius(bottomLeft)
                 )
             )
         }
 
         else -> {
             Outline.Generic(
-                createRoundedRectanglePath(
+                continuousCurvatureRoundedRectanglePath(
                     size = size,
                     topLeft = topLeft,
                     topRight = topRight,
@@ -85,13 +89,19 @@ fun createRoundedRectangleOutline(
     }
 }
 
-fun createRoundedRectanglePath(size: Size, radius: Float, path: Path = Path()): Path {
+private fun continuousCurvatureRoundedRectanglePath(
+    size: Size,
+    radius: Float,
+    path: Path? = null
+): Path {
     val width = size.width
     val height = size.height
-    val path = path.apply {
-        val cornerBuilder = G3CornerBuilder.Default
+    val path = path?.apply { rewind() } ?: Path()
+    return path.apply {
+        val cornerBuilder = ContinuousCurvatureRoundedRectangleCornerBuilder.Default
         val w = width.toDouble()
         val h = height.toDouble()
+
         val r = radius.toDouble()
         val tW = ((width * 0.5 - r) / r).fastCoerceIn(0.0, 1.0)
         val tH = ((height * 0.5 - r) / r).fastCoerceIn(0.0, 1.0)
@@ -176,21 +186,21 @@ fun createRoundedRectanglePath(size: Size, radius: Float, path: Path = Path()): 
 
         close()
     }
-    return path
 }
 
-fun createRoundedRectanglePath(
+private fun continuousCurvatureRoundedRectanglePath(
     size: Size,
     topLeft: Float,
     topRight: Float,
     bottomRight: Float,
     bottomLeft: Float,
-    path: Path = Path()
+    path: Path? = null
 ): Path {
     val width = size.width
     val height = size.height
-    val path = path.apply {
-        val cornerBuilder = G3CornerBuilder.Default
+    val path = path?.apply { rewind() } ?: Path()
+    return path.apply {
+        val cornerBuilder = ContinuousCurvatureRoundedRectangleCornerBuilder.Default
         val w = width.toDouble()
         val h = height.toDouble()
 
@@ -296,5 +306,4 @@ fun createRoundedRectanglePath(
 
         close()
     }
-    return path
 }

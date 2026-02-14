@@ -1,6 +1,6 @@
 package com.kyant.shapes
 
-import androidx.compose.ui.geometry.Rect
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.unit.Density
@@ -8,57 +8,67 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.util.fastCoerceIn
 
-fun RoundedRectangle(cornerRadius: Float) =
-    RoundedRectangle(cornerRadius = CornerRadius.Px(cornerRadius))
+@Immutable
+class RoundedRectangle(
+    val cornerRadius: Dp,
+    override val style: RoundedCornerStyle = RoundedCornerStyle.Continuous
+) : RoundedRectangularShape {
 
-fun RoundedRectangle(cornerRadius: Dp) =
-    RoundedRectangle(cornerRadius = CornerRadius.Dp(cornerRadius))
-
-data class RoundedRectangle(val cornerRadius: CornerRadius) : RoundedRectangularShape {
-
-    override fun cornerRadii(size: Size, layoutDirection: LayoutDirection, density: Density): FloatArray {
-        val cornerRadiusPx =
-            context(size, density) {
-                cornerRadius.toPx().fastCoerceIn(0f, size.minDimension * 0.5f)
-            }
-        return FloatArray(4) { cornerRadiusPx }
+    override fun corners(
+        size: Size,
+        layoutDirection: LayoutDirection,
+        density: Density
+    ): RoundedRectangularShape.Corners {
+        val radius = with(density) { cornerRadius.toPx() }.fastCoerceIn(0f, size.minDimension * 0.5f)
+        return RoundedRectangularShape.Corners(
+            topLeft = radius,
+            topRight = radius,
+            bottomRight = radius,
+            bottomLeft = radius
+        )
     }
 
     override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
-        val cornerRadiusPx =
-            context(size, density) {
-                cornerRadius.toPx().fastCoerceIn(0f, size.minDimension * 0.5f)
-            }
-
-        if (cornerRadiusPx <= 0f) {
-            return Outline.Rectangle(
-                Rect(
-                    left = 0f,
-                    top = 0f,
-                    right = size.width,
-                    bottom = size.height
-                )
-            )
-        }
-
-        return createRoundedRectangleOutline(size = size, radius = cornerRadiusPx)
+        val radius = with(density) { cornerRadius.toPx() }.fastCoerceIn(0f, size.minDimension * 0.5f)
+        return roundedRectangleOutline(
+            size = size,
+            radius = radius,
+            style = style
+        )
     }
 
-    fun copy(cornerRadius: Float) =
-        RoundedRectangle(cornerRadius = cornerRadius)
-
-    fun copy(cornerRadius: Dp) =
-        RoundedRectangle(cornerRadius = cornerRadius)
-
-    fun asUneven(rtlAware: Boolean = true): UnevenRoundedRectangle {
-        return UnevenRoundedRectangle(
-            cornerRadii = RectangleCornerRadii(
-                topStart = cornerRadius,
-                topEnd = cornerRadius,
-                bottomEnd = cornerRadius,
-                bottomStart = cornerRadius,
-                rtlAware = rtlAware
-            )
+    override fun copy(style: RoundedCornerStyle) =
+        RoundedRectangle(
+            cornerRadius = cornerRadius,
+            style = style
         )
+
+    fun copy(
+        cornerRadius: Dp = this.cornerRadius,
+        style: RoundedCornerStyle = this.style
+    ) =
+        RoundedRectangle(
+            cornerRadius = cornerRadius,
+            style = style
+        )
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is RoundedRectangle) return false
+
+        if (cornerRadius != other.cornerRadius) return false
+        if (style != other.style) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = cornerRadius.hashCode()
+        result = 31 * result + style.hashCode()
+        return result
+    }
+
+    override fun toString(): String {
+        return "RoundedRectangle(cornerRadius=$cornerRadius, style=$style)"
     }
 }

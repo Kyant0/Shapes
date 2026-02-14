@@ -19,7 +19,9 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.kyant.shapes.RoundedRectangle
+import com.kyant.shapes.Capsule
+import com.kyant.shapes.Rectangle
+import com.kyant.shapes.lerp
 
 @Composable
 fun MainContent() {
@@ -40,8 +42,7 @@ fun MainContent() {
             Box(
                 Modifier
                     .drawBehind {
-                        val radius = size.minDimension * 0.5f * cornerRadiusRatio.floatValue
-                        val shape = RoundedRectangle(radius)
+                        val shape = lerp(Rectangle, Capsule(), cornerRadiusRatio.floatValue)
                         drawOutline(
                             shape.createOutline(size, layoutDirection, this),
                             color = Color(0xFF0088FF)

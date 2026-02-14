@@ -34,8 +34,8 @@ fun Slider(
 
     Column(
         modifier
-            .border(1.dp, sliderColor, Capsule)
-            .clip(Capsule)
+            .border(1.dp, sliderColor, Capsule())
+            .clip(Capsule())
             .drawBehind {
                 val value = (state.value - valueRange.start) / (valueRange.endInclusive - valueRange.start)
                 drawRect(

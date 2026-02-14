@@ -1,4 +1,4 @@
-package com.kyant.shapes.internal
+package com.kyant.shapes
 
 import kotlin.math.acos
 import kotlin.math.cbrt
@@ -7,7 +7,7 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.math.tan
 
-internal data class G3CornerBuilder(
+internal class ContinuousCurvatureRoundedRectangleCornerBuilder(
     val extendedFraction: Double = 2.0 / 3.0,
     val arcFraction: Double = 0.5
 ) {
@@ -143,7 +143,7 @@ internal data class G3CornerBuilder(
 
     companion object {
 
-        val Default = G3CornerBuilder()
+        val Default = ContinuousCurvatureRoundedRectangleCornerBuilder()
     }
 }
 
