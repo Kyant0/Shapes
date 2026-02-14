@@ -189,7 +189,7 @@ fun createRoundedRectanglePath(
 ): Path {
     val width = size.width
     val height = size.height
-    val path = Path().apply {
+    val path = path.apply {
         val cornerBuilder = G3CornerBuilder.Default
         val w = width.toDouble()
         val h = height.toDouble()
