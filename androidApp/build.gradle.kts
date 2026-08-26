@@ -13,10 +13,11 @@ kotlin {
 
 android {
     namespace = "com.kyant.shapes.app"
-    compileSdk = 36
+    compileSdk = 37
+    buildToolsVersion = "37.0.0"
 
     defaultConfig {
-        targetSdk = 36
+        targetSdk = 37
         minSdk = 23
 
         applicationId = "com.kyant.shapes.app"

@@ -9,18 +9,21 @@ plugins {
 }
 
 kotlin {
-    androidLibrary {
+    android {
         minSdk = 21
-        compileSdk = 36
+        compileSdk = 37
+        buildToolsVersion = "37.0.0"
         namespace = "com.kyant.shapes"
         compilerOptions {
             jvmTarget = JvmTarget.JVM_11
         }
     }
 
+    applyDefaultHierarchyTemplate()
+
     jvm("desktop")
 
-    js(IR) {
+    js {
         browser()
     }
     wasmJs {
@@ -32,12 +35,10 @@ kotlin {
     iosSimulatorArm64("iosSimulatorArm64")
 
     sourceSets {
-        commonMain.dependencies {
-            implementation(libs.compose.ui)
-        }
-
-        all {
-            languageSettings.enableLanguageFeature("ContextParameters")
+        val commonMain = getByName("commonMain") {
+            dependencies {
+                implementation(libs.compose.ui)
+            }
         }
     }
 }
@@ -46,7 +47,7 @@ mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
 
-    coordinates("io.github.kyant0", "shapes", "1.2.0")
+    coordinates("io.github.kyant0", "shapes", "1.2.1")
 
     pom {
         name.set("Shapes")
